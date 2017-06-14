@@ -1,0 +1,8 @@
+[package]
+name = "schani_apigateway"
+version = "0.1.0"
+authors = ["stefan <stefan.roesch1985@gmail.com>"]
+
+[dependencies]
+rocket = "0.2.8"
+rocket_codegen = "0.2.8"
