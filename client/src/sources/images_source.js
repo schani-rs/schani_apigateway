@@ -12,7 +12,7 @@ export function tag({ id, label }) {
 }
 
 export function getAll() {
-  console.log('GETALL!!');
+  console.log(SCHANI_STORE_API);
   return [
     {
       id: 1,

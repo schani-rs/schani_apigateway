@@ -12123,9 +12123,7 @@ var _reduxActions = __webpack_require__(316);
 var _images_source = __webpack_require__(334);
 
 var getAllImages = exports.getAllImages = (0, _reduxActions.createAction)('GET_ALL_IMAGES', function () {
-  var val = (0, _images_source.getAll)();
-  console.log(val);
-  return val;
+  return (0, _images_source.getAll)();
 });
 var updateImage = exports.updateImage = (0, _reduxActions.createAction)('UPDATE_IMAGE');
 
@@ -23730,7 +23728,7 @@ var App = function App(_ref) {
 
 App.propTypes = {
   store: _propTypes2.default.object.isRequired, // eslint-disable-line react/forbid-prop-types
-  //  images: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
+  images: _propTypes2.default.array.isRequired, // eslint-disable-line react/forbid-prop-types
   loadImages: _propTypes2.default.func.isRequired
 };
 
@@ -23908,7 +23906,7 @@ var ImageList = function ImageList(_ref) {
     images.map(function (i) {
       return _react2.default.createElement(
         _reactBootstrap.ListGroupItem,
-        null,
+        { key: i.id },
         _react2.default.createElement(_Image2.default, i)
       );
     })
@@ -24042,7 +24040,7 @@ function tag(_ref2) {
 }
 
 function getAll() {
-  console.log('GETALL!!');
+  console.log("/localhost/8000/api/");
   return [{
     id: 1,
     title: 'test1',

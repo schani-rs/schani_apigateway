@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
   entry: './client/src/index.jsx',
@@ -23,4 +24,9 @@ module.exports = {
       { test: /\.css$/, loader: 'style-loader!css-loader' },
     ],
   },
+  plugins: [
+    new webpack.DefinePlugin({
+      SCHANI_STORE_API: JSON.stringify('/localhost/8000/api/'),
+    }),
+  ],
 };

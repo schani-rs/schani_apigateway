@@ -5,7 +5,7 @@ import Image from './Image';
 
 const ImageList = ({ images }) => (
   <ListGroup>
-    {images.map(i => (<ListGroupItem><Image {...i} /></ListGroupItem>))}
+    {images.map(i => (<ListGroupItem key={i.id}><Image {...i} /></ListGroupItem>))}
   </ListGroup>
 );
 
