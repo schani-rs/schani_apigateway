@@ -26,7 +26,7 @@ module.exports = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      SCHANI_STORE_API: JSON.stringify('/localhost/8000/api/'),
+      SCHANI_APIGATEWAY: JSON.stringify('/localhost/8001/'),
     }),
   ],
 };
