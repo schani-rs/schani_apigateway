@@ -24040,7 +24040,7 @@ function tag(_ref2) {
 }
 
 function getAll() {
-  console.log("/localhost/8000/api/");
+  console.log("/localhost/8001/" + 'images');
   return [{
     id: 1,
     title: 'test1',
