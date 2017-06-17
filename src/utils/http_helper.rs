@@ -6,12 +6,13 @@ use std::io::prelude::*;
 use hyper;
 use hyper::status::StatusClass;
 use hyper::client::response::Response;
+use hyper::method::Method;
 use dotenv;
 use rocket::response::Content;
 use rocket::http::ContentType;
 use rocket::data::Data;
 
-fn method_json(response: &mut Response) -> Result<Content<String>, Box<Error>> {
+fn check_status(response: &mut Response) -> Result<Content<String>, Box<Error>> {
     let mut body = String::new();
     match response.status.class() {
         StatusClass::Success => {
@@ -22,23 +23,7 @@ fn method_json(response: &mut Response) -> Result<Content<String>, Box<Error>> {
     }
 }
 
-pub fn get_json(uri: &str) -> Result<Content<String>, Box<Error>> {
-    let store_uri = try!(env::var("SCHANI_STORE_URL")) + uri;
-    let client = hyper::client::Client::new();
-    let url = try!(hyper::Url::parse(&store_uri));
-    let mut response = try!(client.request(hyper::method::Method::Get, url).send());
-    method_json(&mut response)
-}
-
-pub fn post_json(uri: &str) -> Result<Content<String>, Box<Error>> {
-    let store_uri = try!(env::var("SCHANI_STORE_URL")) + uri;
-    let client = hyper::client::Client::new();
-    let url = try!(hyper::Url::parse(&store_uri));
-    let mut response = try!(client.request(hyper::method::Method::Post, url).send());
-    method_json(&mut response)
-}
-
-pub fn post_file(uri: &str, data: Data) -> Result<Content<String>, Box<Error>> {
+fn post_data(uri: &str, data: Data) -> Result<Content<String>, Box<Error>> {
     dotenv::dotenv().ok();
     let store_uri = try!(env::var("SCHANI_STORE_URL")) + uri;
     let url = try!(hyper::Url::parse(&store_uri));
@@ -52,5 +37,29 @@ pub fn post_file(uri: &str, data: Data) -> Result<Content<String>, Box<Error>> {
     try!(str_req.write_all(buf.as_slice()));
     try!(str_req.flush());
     let mut response = try!(str_req.send());
-    method_json(&mut response)
+    check_status(&mut response)
+}
+
+fn qry_json(uri: &str, method: Method) -> Result<Content<String>, Box<Error>> {
+    let store_uri = try!(env::var("SCHANI_STORE_URL")) + uri;
+    let client = hyper::client::Client::new();
+    let url = try!(hyper::Url::parse(&store_uri));
+    let mut response = try!(client.request(method, url).send());
+    check_status(&mut response)
+}
+
+pub fn get_json(uri: &str) -> Option<Content<String>> {
+    qry_json(uri, Method::Get).ok()
+}
+
+pub fn post_json(uri: &str) -> Option<Content<String>> {
+    qry_json(uri, Method::Post).ok()
+}
+
+pub fn put_json(uri: &str) -> Option<Content<String>> {
+    qry_json(uri, Method::Put).ok()
+}
+
+pub fn post_file(uri: &str, data: Data) -> Option<Content<String>> {
+    post_data(uri, data).ok()
 }

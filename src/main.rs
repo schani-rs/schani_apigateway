@@ -6,7 +6,7 @@ extern crate hyper;
 extern crate dotenv;
 extern crate rocket_contrib;
 
-use self::schani_apigateway::routes::images;
+use self::schani_apigateway::routes::{images, collections};
 
 fn rocket() -> rocket::Rocket {
     rocket::ignite().mount("/api",
@@ -16,7 +16,12 @@ fn rocket() -> rocket::Rocket {
                                    images::get_image_file,
                                    images::new_image,
                                    images::new_image_file,
-                                   images::new_sidecar_file])
+                                   images::new_sidecar_file,
+                                   images::update,
+                                   collections::get_collections,
+                                   collections::get_collection,
+                                   collections::new_collection,
+                                   collections::update])
 }
 
 fn main() {
