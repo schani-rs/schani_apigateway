@@ -15,7 +15,8 @@ fn rocket() -> rocket::Rocket {
                                    images::get_sidecar_file,
                                    images::get_image_file,
                                    images::new_image,
-                                   images::new_image_file])
+                                   images::new_image_file,
+                                   images::new_sidecar_file])
 }
 
 fn main() {
