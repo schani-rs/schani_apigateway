@@ -16,6 +16,12 @@ fn get_image<'r>(id: i32) -> Option<Response<'r>> {
     get_x(store_uri, ContentType::JSON)
 }
 
+#[get("/images/<id>/tags")]
+fn get_tags_of_image<'r>(id: i32) -> Option<Response<'r>> {
+    let store_uri = format!("/images/{}/tags", id);
+    get_x(store_uri, ContentType::JSON)
+}
+
 #[get("/images/<id>/sidecar")]
 fn get_sidecar_file<'r>(id: i32) -> Option<Response<'r>> {
     let store_uri = format!("/images/{}/sidecar", id);

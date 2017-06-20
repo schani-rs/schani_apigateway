@@ -18,6 +18,7 @@ fn rocket() -> rocket::Rocket {
                                    images::new_image_file,
                                    images::new_sidecar_file,
                                    images::update,
+                                   images::get_tags_of_image,
                                    collections::get_collections,
                                    collections::get_collection,
                                    collections::new_collection,
