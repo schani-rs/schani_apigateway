@@ -50,8 +50,7 @@ fn new_image<'r>(new_image: NewImage) -> Option<Response<'r>> {
 #[post("/images/<image_id>/tags/<tag_id>")]
 fn new_image_tag<'r>(image_id: i32, tag_id: i32) -> Option<Response<'r>> {
     let store_uri =
-        format!(
-        "/images/{}/tags/{}",
+        format!("/images/{}/tags/{}",
         image_id,
         tag_id,
     );
