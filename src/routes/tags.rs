@@ -17,12 +17,12 @@ fn get_tag<'r>(id: i32) -> Option<Response<'r>> {
 
 #[post("/tags/new?<new_tag>")]
 fn new_tag<'r>(new_tag: NewTag) -> Option<Response<'r>> {
-    let store_uri = format!("/tags/label?label={}", new_tag.label);
+    let store_uri = format!("/tags/new?label={}", new_tag.label);
     post_x(store_uri, ContentType::JSON)
 }
 
 #[put("/tags/update?<tag>")]
 fn update<'r>(tag: Tag) -> Option<Response<'r>> {
-    let store_uri = format!("/tags/label?id={}label={}", tag.id, tag.label);
+    let store_uri = format!("/tags/update?id={}label={}", tag.id, tag.label);
     put_x(store_uri, ContentType::JSON)
 }

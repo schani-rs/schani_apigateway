@@ -9,24 +9,29 @@ extern crate rocket_contrib;
 use self::schani_apigateway::routes::{images, collections, tags};
 
 fn rocket() -> rocket::Rocket {
-    rocket::ignite().mount("/api",
-                           routes![images::get_images,
-                                   images::get_image,
-                                   images::get_sidecar_file,
-                                   images::get_image_file,
-                                   images::new_image,
-                                   images::new_image_file,
-                                   images::new_sidecar_file,
-                                   images::update,
-                                   images::get_tags_of_image,
-                                   collections::get_collections,
-                                   collections::get_collection,
-                                   collections::new_collection,
-                                   collections::update,
-                                   tags::get_tags,
-                                   tags::get_tag,
-                                   tags::new_tag,
-                                   tags::update])
+    rocket::ignite().mount(
+        "/api",
+        routes![
+            images::get_images,
+            images::get_image,
+            images::get_sidecar_file,
+            images::get_image_file,
+            images::new_image,
+            images::new_image_file,
+            images::new_sidecar_file,
+            images::update,
+            images::get_tags_of_image,
+            images::new_image_tag,
+            collections::get_collections,
+            collections::get_collection,
+            collections::new_collection,
+            collections::update,
+            tags::get_tags,
+            tags::get_tag,
+            tags::new_tag,
+            tags::update,
+        ],
+    )
 }
 
 fn main() {
