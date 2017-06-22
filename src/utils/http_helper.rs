@@ -4,62 +4,114 @@ use std::io::Read;
 use std::io;
 use std::io::prelude::*;
 use hyper;
-use hyper::status::StatusClass;
+use hyper::status::{StatusClass, StatusCode};
 use hyper::client::response::Response;
 use hyper::method::Method;
 use dotenv;
-use rocket::response::Content;
+use rocket;
+use rocket::response::{Content, Responder};
 use rocket::http::ContentType;
 use rocket::data::Data;
 
-fn check_status(response: &mut Response) -> Result<Content<String>, Box<Error>> {
-    let mut body = String::new();
+fn check_status<'r>(
+    response: Response,
+    content_type: ContentType,
+) -> Result<rocket::Response<'r>, Box<Error>> {
     match response.status.class() {
         StatusClass::Success => {
-            try!(response.read_to_string(&mut body));
-            Ok(Content(ContentType::JSON, body.clone()))
+            match response.status {
+                StatusCode::NoContent => {
+                    match rocket::response::status::NoContent.respond() {
+                        Ok(r) => {
+                            let mut final_resp = rocket::Response::build_from(r);
+                            final_resp.header(hyper::header::AccessControlAllowOrigin::Any);
+                            return final_resp.ok();
+                        }
+                        Err(_) => {
+                            return Err(Box::new(
+                                io::Error::new(io::ErrorKind::Other, "Bad Request!"),
+                            ))
+                        }
+                    }
+                }
+                _ => {
+                    let s = rocket::response::Stream::from(response);
+                    let cors_response = match Content(content_type, s).respond() {
+                        Ok(r) => r,
+                        Err(_) => {
+                            return Err(Box::new(
+                                io::Error::new(io::ErrorKind::Other, "Bad Request!"),
+                            ))
+                        }
+                    };
+                    let mut final_resp = rocket::Response::build_from(cors_response);
+                    final_resp.header(hyper::header::AccessControlAllowOrigin::Any);
+                    final_resp.ok()
+                }
+            }
         }
-        _ => Err(Box::new(io::Error::new(io::ErrorKind::Other, "Bad Request!"))),
+        _ => Err(Box::new(
+            io::Error::new(io::ErrorKind::Other, "Bad Request!"),
+        )),
     }
 }
 
-fn post_data(uri: &str, data: Data) -> Result<Content<String>, Box<Error>> {
+fn post_data<'r>(
+    uri: String,
+    data: Data,
+    content_type: ContentType,
+) -> Result<rocket::Response<'r>, Box<Error>> {
     dotenv::dotenv().ok();
-    let store_uri = try!(env::var("SCHANI_STORE_URL")) + uri;
+    let store_uri = try!(env::var("SCHANI_STORE_URL")) + &uri;
     let url = try!(hyper::Url::parse(&store_uri));
     let mut content = data.open();
     let mut buf = vec![];
     try!(content.read_to_end(&mut buf));
-    let mut req = try!(hyper::client::request::Request::new(hyper::method::Method::Post, url));
-    req.headers_mut()
-        .set(hyper::header::ContentLength(buf.len() as u64));
+    let mut req = try!(hyper::client::request::Request::new(
+        hyper::method::Method::Post,
+        url,
+    ));
+    req.headers_mut().set(hyper::header::ContentLength(
+        buf.len() as u64,
+    ));
     let mut str_req = try!(req.start());
     try!(str_req.write_all(buf.as_slice()));
     try!(str_req.flush());
-    let mut response = try!(str_req.send());
-    check_status(&mut response)
+    let response = try!(str_req.send());
+    check_status(response, content_type)
 }
 
-fn qry_json(uri: &str, method: Method) -> Result<Content<String>, Box<Error>> {
-    let store_uri = try!(env::var("SCHANI_STORE_URL")) + uri;
+fn qry<'r>(
+    uri: String,
+    method: Method,
+    content_type: ContentType,
+) -> Result<rocket::Response<'r>, Box<Error>> {
+    let store_uri = try!(env::var("SCHANI_STORE_URL")) + &uri;
     let client = hyper::client::Client::new();
     let url = try!(hyper::Url::parse(&store_uri));
-    let mut response = try!(client.request(method, url).send());
-    check_status(&mut response)
+    let response = try!(client.request(method, url).send());
+    check_status(response, content_type)
 }
 
-pub fn get_json(uri: &str) -> Option<Content<String>> {
-    qry_json(uri, Method::Get).ok()
+pub fn get_x<'r>(uri: String, content_type: ContentType) -> Option<rocket::Response<'r>> {
+    let result = qry(uri, Method::Get, content_type);
+    info!("{:?}", result);
+    // qry(uri, Method::Get, content_type).ok()
+    result.ok()
 }
 
-pub fn post_json(uri: &str) -> Option<Content<String>> {
-    qry_json(uri, Method::Post).ok()
+pub fn post_x<'r>(uri: String, content_type: ContentType) -> Option<rocket::Response<'r>> {
+    qry(uri, Method::Post, content_type).ok()
 }
 
-pub fn put_json(uri: &str) -> Option<Content<String>> {
-    qry_json(uri, Method::Put).ok()
+pub fn put_x<'r>(uri: String, content_type: ContentType) -> Option<rocket::Response<'r>> {
+    qry(uri, Method::Put, content_type).ok()
 }
 
-pub fn post_file(uri: &str, data: Data) -> Option<Content<String>> {
-    post_data(uri, data).ok()
+pub fn post_file_x<'r>(
+    uri: String,
+    data: Data,
+    content_type: ContentType,
+) -> Option<rocket::Response<'r>> {
+    post_data(uri, data, content_type).ok()
 }
