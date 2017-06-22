@@ -26,6 +26,7 @@ fn rocket() -> rocket::Rocket {
             collections::get_collection,
             collections::new_collection,
             collections::update,
+            collections::new_image_collection,
             tags::get_tags,
             tags::get_tag,
             tags::new_tag,
