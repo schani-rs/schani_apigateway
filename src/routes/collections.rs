@@ -45,3 +45,9 @@ fn new_image_collection<'r>(image_id: i32, collection_id: i32) -> Option<Respons
     );
     post_x(store_uri, ContentType::JSON)
 }
+
+#[get("/collections/<id>/images")]
+fn get_images_of_collection<'r>(id: i32) -> Option<Response<'r>> {
+    let store_uri = format!("/collections/{}/images", id);
+    get_x(store_uri, ContentType::JSON)
+}
