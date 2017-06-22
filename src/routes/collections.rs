@@ -36,12 +36,12 @@ fn update<'r>(collection: Collection) -> Option<Response<'r>> {
     put_x(store_uri, ContentType::JSON)
 }
 
-#[post("/images/<image_id>/collections/<collection_id>")]
+#[post("/collections/<collection_id>/images/<image_id>")]
 fn new_image_collection<'r>(image_id: i32, collection_id: i32) -> Option<Response<'r>> {
     let store_uri =
-        format!("/images/{}/collections/{}",
-        image_id,
+        format!("/collections/{}/images/{}",
         collection_id,
+        image_id,
     );
     post_x(store_uri, ContentType::JSON)
 }
