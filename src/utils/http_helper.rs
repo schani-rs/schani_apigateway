@@ -7,6 +7,7 @@ use hyper;
 use hyper::status::{StatusClass, StatusCode};
 use hyper::client::response::Response;
 use hyper::method::Method;
+use hyper::header;
 use dotenv;
 use rocket;
 use rocket::response::{Content, Responder};
@@ -90,6 +91,33 @@ fn qry<'r>(
     let client = hyper::client::Client::new();
     let url = try!(hyper::Url::parse(&store_uri));
     let response = try!(client.request(method, url).send());
+    check_status(response, content_type)
+}
+
+pub fn post_credentials<'r>(uri: String, body: String) -> Result<rocket::Response<'r>, Box<Error>> {
+    let store_uri = try!(env::var("SCHANI_AUTH")) + &uri;
+    let client = hyper::client::Client::new();
+    let url = try!(hyper::Url::parse(&store_uri));
+    let mut headers = header::Headers::new();
+    headers.set(header::ContentType::form_url_encoded());
+    let response = try!(
+        client
+            .request(Method::Post, url)
+            .headers(headers)
+            .body(&body)
+            .send()
+    );
+    check_status(response, ContentType::Plain)
+}
+
+pub fn post_verify<'r>(
+    uri: String,
+    content_type: ContentType,
+) -> Result<rocket::Response<'r>, Box<Error>> {
+    let store_uri = try!(env::var("SCHANI_AUTH")) + &uri;
+    let client = hyper::client::Client::new();
+    let url = try!(hyper::Url::parse(&store_uri));
+    let response = try!(client.request(Method::Post, url).send());
     check_status(response, content_type)
 }
 
