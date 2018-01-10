@@ -1,7 +1,0 @@
-from debian:latest
-
-VOLUME ["/schani_apigateway"]
-
-EXPOSE 8000
-
-ENTRYPOINT ["/schani_apigateway/schani_apigateway"]
