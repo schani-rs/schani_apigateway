@@ -19,21 +19,23 @@ class AuthService {
                 console.info('successfully logged in ' + username, jwt);
                 res.send(jwt);
             })
-            .catch(() => {
+            .catch((e) => {
+                console.warn('login failed for user <' + username + '>: ', e);
                 res.sendStatus(400).end();
             });
     }
 
     check_logged_in(req, res, next) {
-        if (req.url.startsWith('/auth/login')) {
+        console.info(req.url);
+        if (typeof req.url !== 'undefined' && req.url.startsWith('/auth/login')) {
             next();
             return;
         }
 
         const token = req.get('Authorization');
         if (!token || !token.substr(0, 'bearer'.length) === 'bearer') {
+            console.debug('no auth headers set -> answering with HTTP 401');
             res.sendStatus(401).end();
-
         }
         const jwt = token.substr('bearer '.length);
         console.debug('got jwt token ' + jwt);
@@ -57,6 +59,7 @@ class AuthService {
             if (res.status === 200) {
                 return Promise.resolve(res.text());
             } else {
+                console.warn('auth service returned HTTP ' + resp.status + ' code');
                 return Promise.reject();
             }
         });

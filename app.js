@@ -4,8 +4,8 @@ const AuthService = require('./auth');
 const ImportClient = require('./import_client');
 
 const app = express();
-const auth = new AuthService('http://localhost:8005');
-const import_client = new ImportClient('http://localhost:8001');
+const auth = new AuthService('http://auth:8000');
+const import_client = new ImportClient('http://import:8000');
 
 app.use(auth.check_logged_in.bind(auth));
 
