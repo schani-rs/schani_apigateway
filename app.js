@@ -17,6 +17,6 @@ app.post('/imports', (req, res) => import_client.start_import(req, res));
 app.put('/imports/:import_id/raw', (req, res) => import_client.upload_raw_file(req, res));
 app.put('/imports/:import_id/sidecar', (req, res) => import_client.upload_sidecar(req, res));
 app.put('/imports/:import_id/image', (req, res) => import_client.upload_image(req, res));
-app.post('/imports/:import_id', (req, res) => import_client.finish_import(req, res));
+app.post('/imports/:import_id/finish', (req, res) => import_client.finish_import(req, res));
 
 app.listen(3000, () => console.log('Schani API gateways listening on port 3000'));

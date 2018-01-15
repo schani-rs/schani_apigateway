@@ -12,7 +12,7 @@ class ImportClient {
             method: 'POST',
             body: req
         }).then((import_res) => {
-            res.sendStatus(import_res.status);
+            res.status(import_res.status);
             return import_res.body.pipe(res);
         }).catch((e) => {
             console.error('error connecting to import service: ', e);
@@ -26,7 +26,7 @@ class ImportClient {
             method: 'PUT',
             body: req
         }).then((import_res) => {
-            res.sendStatus(import_res.status);
+            res.status(import_res.status);
             return import_res.body.pipe(res);
         }).catch((e) => {
             console.error('error connecting to import service: ', e);
@@ -40,7 +40,7 @@ class ImportClient {
             method: 'PUT',
             body: req
         }).then((import_res) => {
-            res.sendStatus(import_res.status);
+            res.status(import_res.status);
             return import_res.body.pipe(res);
         }).catch((e) => {
             console.error('error connecting to import service: ', e);
@@ -54,7 +54,7 @@ class ImportClient {
             method: 'PUT',
             body: req
         }).then((import_res) => {
-            res.sendStatus(import_res.status);
+            res.status(import_res.status);
             return import_res.body.pipe(res);
         }).catch((e) => {
             console.error('error connecting to import service: ', e);
@@ -68,7 +68,7 @@ class ImportClient {
             method: 'POST',
             body: req
         }).then((import_res) => {
-            res.sendStatus(import_res.status);
+            res.status(import_res.status);
             return import_res.body.pipe(res);
         }).catch((e) => {
             console.error('error connecting to import service: ', e);
