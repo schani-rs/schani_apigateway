@@ -9,7 +9,7 @@ const app = express()
 const auth = new AuthService('http://auth:8000')
 const import_client = new ImportClient('http://import:8000')
 const store_client = new StoreClient('http://store:8000')
-const thumbnail_client = new ThumbnailClient('http://thumbnailer-cache:80')
+const thumbnail_client = new ThumbnailClient('http://thumbnailer-cache:8000')
 
 app.use(auth.check_logged_in.bind(auth))
 
