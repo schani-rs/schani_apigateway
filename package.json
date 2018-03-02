@@ -17,7 +17,7 @@
   "author": "Christoph Wurst",
   "license": "AGPL-3.0",
   "dependencies": {
-    "concat-stream": "^1.6.0",
+    "concat-stream": "^1.6.1",
     "express": "^4.16.2",
     "node-fetch": "^2.0.0"
   }
