@@ -18,7 +18,7 @@
   "license": "AGPL-3.0",
   "dependencies": {
     "concat-stream": "^1.6.1",
-    "express": "^4.16.2",
+    "express": "^4.16.3",
     "node-fetch": "^2.1.1"
   }
 }
